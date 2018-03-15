@@ -1,33 +1,48 @@
 <?php
 echo $this->headScript()
-    ->appendFile($this->basePath().'/js/ckeditor/ckeditor.js')
-    ->appendFile($this->basePath().'/js/ckeditor/adapters/jquery.js');
+    ->appendFile($this->basePath() . '/js/ckeditor/ckeditor.js')
+    ->appendFile($this->basePath() . '/js/ckeditor/adapters/jquery.js');
 
 ?>
 <script>
 
-    var BASEPATH = "<?php echo $this->basePath().'/js/ckeditor'; ?>";
+    var BASEPATH = "<?php echo $this->basePath() . '/js/ckeditor'; ?>";
 
     $(document).ready(function () {
-        var editor = CKEDITOR.replace( 'descriptionEditor', {
-            filebrowserBrowseUrl : BASEPATH +'/ckfinder/ckfinder.html',
-            filebrowserImageBrowseUrl: BASEPATH +'/ckfinder/ckfinder.html?type=Images',
-            filebrowserFlashBrowseUrl : BASEPATH +'/ckfinder/ckfinder.html?type=Flash',
-            filebrowserUploadUrl : BASEPATH +'/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-            filebrowserImageUploadUrl : BASEPATH +'/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
-            filebrowserFlashUploadUrl : BASEPATH +'/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash',
+        CKEDITOR.replace('descriptionEditor', {
+            filebrowserBrowseUrl: BASEPATH + '/ckfinder/ckfinder.html',
+            filebrowserImageBrowseUrl: BASEPATH + '/ckfinder/ckfinder.html?type=Images',
+            filebrowserFlashBrowseUrl: BASEPATH + '/ckfinder/ckfinder.html?type=Flash',
+            filebrowserUploadUrl: BASEPATH + '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+            filebrowserImageUploadUrl: BASEPATH + '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+            filebrowserFlashUploadUrl: BASEPATH + '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash',
         });
 
+
+        $(".ProductImage").click(function () {
+            var productImageId = $(this).attr("productImageId");
+            $.ajax({
+                url: '/admin/product/deleteImage/' + productImageId,
+                type: 'POST',
+                data: {"id": productImageId},
+                success: function (data) {
+                    alert(data.result);
+                    if (data.result == "success") {
+                        window.location.reload();
+                    }
+                }
+            });
+        });
 //        var editor = CKEDITOR.replace( 'descriptionEditor' );
 //        CKFinder.setupCKEditor( editor );
 //        var editor = CKEDITOR.replace( 'descriptionEditor' );
-        CKFinder.setupCKEditor( editor, null, { type: 'Files', currentFolder: '/public/data/' } );
+//        CKFinder.setupCKEditor(editor, null, {type: 'Files', currentFolder: '/public/data/'});
     })
 </script>
 
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Sản phẩm mới</h1>
+        <h1 class="page-header">Sửa sản phẩm <?= $product->getName(); ?></h1>
     </div>
     <!-- /.col-lg-12 -->
 </div>
@@ -35,17 +50,20 @@ echo $this->headScript()
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Thêm sản phẩm mới
+                Nhập thông tin sửa
             </div>
             <div class="panel-body">
                 <div class="row">
+                    <?php
+                    $form = $this->form;
+                    $form->prepare();
+                    $form->setAttribute('action', $this->url('admin/product', array('action' => 'edit', 'id' => $productId)));
+
+                    echo $this->form()->openTag($form);
+                    ?>
                     <div class="col-md-8">
                         <?php
-                        $form = $this->form;
-                        $form->prepare();
-                        $form->setAttribute('action', $this->url('admin/product', array('action' => 'edit','id'=> $productId)));
 
-                        echo $this->form()->openTag($form);
 
                         echo "<div class='form-group'>";
                         echo $this->formLabel($form->get('name')) . " ";
@@ -108,12 +126,43 @@ echo $this->headScript()
                         echo $this->formElementErrors($form->get('view'));
                         echo "</div>";
 
-
                         echo $this->formElement($form->get('submit'));
-                        echo $this->form()->closeTag();
-
                         ?>
                     </div>
+
+                    <div class="col-md-4">
+                        <?php
+                        echo "<div class='form-group'>";
+                        echo $this->formLabel($form->get('productImages')) . " ";
+                        echo $this->formElement($form->get('productImages'));
+                        echo $this->formElementErrors($form->get('productImages'));
+                        echo "</div>";
+                        ?>
+
+                            <div class="form-group">
+                                <label>Hình chi tiết</label>
+                                <div class="row">
+                                    <?php
+                                    $basePath = $this->basePath();
+                                    foreach($product->getImageDetails() as $image) :
+                                        $imageLink = "$basePath/data/images/".$image->getImage();
+                                    ?>
+                                    <div class="col-md-2" style="width: 150px; height: 150px;">
+                                        <p>
+                                            <img src='<?=$imageLink ?>' width='100' height='100'>
+                                        </p>
+                                        <button style="margin-top: -6px;margin-left: 60px; " type="button" productImageId="<?=$image->getId() ?>"
+                                                class="btn btn-default ProductImage">X
+                                        </button>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+
+                    </div>
+                    <?php
+                        echo $this->form()->closeTag();
+                    ?>
                 </div>
             </div>
         </div>

@@ -27,6 +27,8 @@ class CategoryController extends MainController
     }
 
     public function addAction(){
+        $sm = $this->getServiceLocator();
+
 
 
         return new ViewModel();

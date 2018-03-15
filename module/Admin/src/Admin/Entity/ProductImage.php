@@ -2,14 +2,15 @@
 
 namespace Admin\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Admin\Entity\Product;
 /**
  * @ORM\Entity
- * @ORM\Table(name="units")
+ * @ORM\Table(name="product_images")
  */
 
- class Unit{
+ class ProductImage{
      /**
       * @ORM\Id
       * @ORM\Column(name="id");
@@ -17,9 +18,9 @@ use Admin\Entity\Product;
       */
      protected $id;
      /**
-      * @ORM\Column(name="name");
+      * @ORM\Column(name="image");
       */
-     protected $name;
+     protected $image;
      /**
       * @ORM\Column(name="created_at");
       */
@@ -30,16 +31,15 @@ use Admin\Entity\Product;
       */
      protected $updatedAt;
 
-      /**
-     *  @ORM\OneToMany(targetEntity="\Admin\Entity\Product",mappedBy="unit")
-     *  @ORM\JoinColumn(name="id",referencedColumnName="unit")
-     */
-    protected $products;
+     /**
+      * @ORM\ManyToOne(targetEntity="\Admin\Entity\Product",inversedBy="product_images")
+      * @ORM\JoinColumn(name="id_product",referencedColumnName="id")
+      */
+     protected $product;
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
-
+        $this->product = new ArrayCollection();
     }
      /**
       * @param int $id
@@ -53,34 +53,6 @@ use Admin\Entity\Product;
      public function getId(){
          return $this->id;
      }
-
-     /**
-      * @param string $name
-      */
-      public function setName($name){
-        $this->name = $name;
-    }
-    /**
-     * @return varchar
-     */
-    public function getName(){
-        return $this->name;
-    }
-
-
-     /**
-      * @param string $description
-      */
-    public function setDescription($description){
-      $this->description = $description;
-    }
-    /**
-     * @return varchar
-     */
-    public function getDescription(){
-        return $this->description;
-    }
-
 
   /**
    * @param string $image
@@ -111,21 +83,27 @@ use Admin\Entity\Product;
     /**
    * @param string $updateAt
    */
-    public function setUpdateAt($updateAt){
-      $this->updateAt = $updateAt;
+    public function setUpdatedAt($updatedAt){
+      $this->updatedAt = $updatedAt;
     }
     /**
      * @return varchar
       */
-    public function getUpdateAt(){
-        return $this->updateAt;
+    public function getUpdatedAt(){
+        return $this->updatedAt;
     }
 
-    /**
-    * @return array
-    *
-    */
-    public function getProducts(){
-      return $this->products;
-    }
+     /**
+      * @return array
+      */
+     public function getProduct(){
+         return $this->product;
+     }
+     /**
+      * set  Unit
+      * @param Product $product
+      */
+     public function setProduct(Product $product){
+         $this->product = $product;
+     }
  }

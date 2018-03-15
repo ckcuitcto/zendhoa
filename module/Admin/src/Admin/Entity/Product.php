@@ -80,10 +80,17 @@ use Admin\Entity\Category;
       */
      protected $unit;
 
+     /**
+      *  @ORM\OneToMany(targetEntity="\Admin\Entity\ProductImage",mappedBy="product")
+      *  @ORM\JoinColumn(name="id",referencedColumnName="id_product")
+      */
+     protected $productImages;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
         $this->unit = new ArrayCollection();
+        $this->productImages = new ArrayCollection();
     }
 
      /**
@@ -258,5 +265,13 @@ use Admin\Entity\Category;
       */
      public function setUnit(Unit $unit){
          $this->unit = $unit;
+     }
+
+     public function getImageDetails(){
+         return $this->productImages;
+     }
+
+     public function setImageDetails($productImages){
+         $this->productImages[] = $productImages;
      }
  }

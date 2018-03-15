@@ -74,12 +74,25 @@ class ProductForm extends Form
     		'type' => 'file',
     		'attributes' => array(
     			'class' => 'form-control',
-                'id' => 'image-file',
+                'id' => 'image',
     		),
     		'options' => array(
     			'label' =>'Image',
     		)
     	));
+
+        $this->add(array(
+            'name' => 'productImages',
+            'type' => 'file',
+            'attributes' => array(
+                'class' => 'form-control',
+                'id' => 'productImages',
+                'multiple' => true,
+            ),
+            'options' => array(
+                'label' =>'Image Details',
+            )
+        ));
 
     	$this->add(array(
     		'name' => 'unit',
@@ -194,35 +207,50 @@ class ProductForm extends Form
             'required' => true,
         ));
 
-        $input->add(array(
-            'name' => 'name',
-            'required' => true,
-            'filters' => array(
-                array('name' => 'StringTrim'),
-                array('name' => 'StripTags'),
-            ),
-            'validator' => array(
-                array(
-                    'name' => 'NotEmpty',
-                ),
-            )
-        ));
-
-
         $fileInput = new FileInput('image');
-        $fileInput->setRequired(true);
+        $fileInput->setRequired(false);
         $fileInput->getValidatorChain()
-            ->attachByName('filesize',      array('max' => 904800))
-            ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpg,img/JPG,image/jpeg'));
+            ->attachByName('filesize',      array('max' => 2004800))
+            ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpg,img/JPG,image/jpeg,application/pdf'));
+
+
+        // phần này sẽ đc set bên upload method
+
 //            ->attachByName('fileimagesize', array('maxWidth' => 1000, 'maxHeight' => 1000));
-        $fileInput->getFilterChain()->attachByName(
-            'filerenameupload',
-            array(
-                'target'    => './public/data/images/',
-                'randomize' => true,
-            )
-        );
+//        $fileInput->getFilterChain()->attachByName(
+//            'filerenameupload',
+//            array(
+//                'target'    => './public/data/images/image.png',
+//                'randomize' => true,
+//            )
+//        );
         $input->add($fileInput);
+
+
+        // File Input
+        $productImages = new FileInput('productImages');
+        $productImages->setRequired(false);
+        // You only need to define validators and filters
+        // as if only one file was being uploaded. All files
+        // will be run through the same validators and filters
+        // automatically.
+        $productImages->getValidatorChain()
+            ->attachByName('filesize',      array('max' => 2004800))
+            ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpg,image/jpeg'));
+
+        // All files will be renamed, i.e.:
+        //   ./data/tmpuploads/avatar_4b3403665fea6.png,
+        //   ./data/tmpuploads/avatar_5c45147660fb7.png
+
+//        $productImages->getFilterChain()->attachByName(
+//            'filerenameupload',
+//            array(
+//                'target'    => './public/data/images/imagedetail.png',
+//                'randomize' => true,
+//            )
+//        );
+        $input->add($productImages);
+
 
         $input->add(array(
             'name' => 'quantity',

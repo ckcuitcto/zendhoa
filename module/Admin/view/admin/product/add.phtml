@@ -40,14 +40,16 @@ echo $this->headScript()
             </div>
             <div class="panel-body">
                 <div class="row">
+                    <?php
+                    $form = $this->form;
+                    $form->prepare();
+                    $form->setAttribute('action', $this->url('admin/product', array('action' => 'add')));
+
+                    echo $this->form()->openTag($form);
+                    ?>
                     <div class="col-md-8">
+
                         <?php
-                        $form = $this->form;
-                        $form->prepare();
-                        $form->setAttribute('action', $this->url('admin/product', array('action' => 'add')));
-
-                        echo $this->form()->openTag($form);
-
                         echo "<div class='form-group'>";
                         echo $this->formLabel($form->get('name')) . " ";
                         echo $this->formElement($form->get('name'));
@@ -111,14 +113,25 @@ echo $this->headScript()
 
 
                         echo $this->formElement($form->get('submit'));
-                        echo $this->form()->closeTag();
-
                         ?>
                     </div>
+
+                    <div class="col-md-4">
+                        <?php
+                            echo "<div class='form-group'>";
+                            echo $this->formLabel($form->get('productImages')) . " ";
+                            echo $this->formElement($form->get('productImages'));
+                            echo $this->formElementErrors($form->get('productImages'));
+                            echo "</div>";
+                        ?>
+
+                    </div>
+
+                    <?php
+                        echo $this->form()->closeTag();
+                    ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
