@@ -36,14 +36,14 @@ echo $this->headScript()
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Thêm thể loại mới
+                Sửa thể loại
             </div>
             <div class="panel-body">
                 <div class="row">
                     <?php
                     $form = $this->form;
                     $form->prepare();
-                    $form->setAttribute('action', $this->url('admin/category', array('action' => 'add')));
+                    $form->setAttribute('action', $this->url('admin/category', array('action' => 'edit','id'=>$id)));
 
                     echo $this->form()->openTag($form);
                     ?>
@@ -70,6 +70,15 @@ echo $this->headScript()
 
                         echo $this->formElement($form->get('submit'));
                         ?>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <?php
+                            $basePath = $this->basePath();
+                            $imageLink = "$basePath/data/images/".$category->getImage();
+                            ?>
+                            <img src='<?=$imageLink ?>' width='200'>
+                        </div>
                     </div>
                     <?php
                     echo $this->form()->closeTag();

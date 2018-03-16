@@ -2,9 +2,11 @@
 
 namespace Admin\Form;
 
+use Zend\Filter\File\RenameUpload;
 use Zend\Form\Form;
 use Zend\InputFilter\FileInput;
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\File\UploadFile;
 
 
 class CategoryForm extends Form
@@ -95,19 +97,18 @@ class CategoryForm extends Form
 
 
         $fileInput = new FileInput('image');
-        $fileInput->setRequired(false);
+        $fileInput->setRequired(true);
         $fileInput->getValidatorChain()
+            ->attach(new UploadFile())
             ->attachByName('filesize',      array('max' => 2*1024*1024))
             ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpg,img/JPG,image/jpeg,application/pdf'));
-        // phần này sẽ đc set bên upload method
 //            ->attachByName('fileimagesize', array('maxWidth' => 1000, 'maxHeight' => 1000));
-//        $fileInput->getFilterChain()->attachByName(
-//            'filerenameupload',
-//            array(
-//                'target'    => './public/data/images/image.png',
-//                'randomize' => true,
-//            )
-//        );
+        // phần này sẽ đc set bên upload method
+        $fileInput->getFilterChain()
+            ->attach(new RenameUpload(array(
+                'target'    => './public/data/images/category.png',
+                'randomize' => true,
+            )));
         $input->add($fileInput);
 
     }

@@ -99,11 +99,6 @@ class ProductManager implements ServiceManagerAwareInterface
         $product->setView($data['view']);
         $product->setCategory($category);
 
-        echo "<pre>";
-        print_r($data);
-        print_r($data['productImages']);
-        echo "</pre>";
-
         $current = date('Y-m-d H:i:s');
         $product->setUpdateAt($current);
 

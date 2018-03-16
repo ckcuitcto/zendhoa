@@ -8,6 +8,7 @@
  */
 namespace Admin;
 
+use Admin\Form\CategoryForm;
 use Admin\Form\VerifyForm;
 use Admin\View\Helper\Layout;
 use Admin\View\Helper\Unicode;
@@ -60,6 +61,10 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
                 },
                 'VerifyForm' => function($sm){
                     $form = new VerifyForm('Verify_Form');
+                    return $form;
+                },
+                'CategoryForm' => function($sm){
+                    $form = new CategoryForm('Category_Form');
                     return $form;
                 }
             ),

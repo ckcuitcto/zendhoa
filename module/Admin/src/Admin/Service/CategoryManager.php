@@ -41,4 +41,33 @@ class CategoryManager implements ServiceManagerAwareInterface
         }
         return $arrCate;
     }
+
+    public function addCategory($data){
+        $em = $this->getEntityManager();
+        $category = new Category();
+        $category->setName($data['name']);
+        $category->setDescription($data['description']);
+        $category->setImage($data['image']);
+
+        $em->persist($category);
+        $em->flush();
+    }
+
+    public function editCategory($cate,$data){
+
+        $em = $this->getEntityManager();
+
+        $cate->setName($data['name']);
+        $cate->setDescription($data['description']);
+
+        if(!empty($data['image']['name'])){
+            $cate->setImage($data['image']);
+        }
+        $current = date('Y-m-d H:i:s');
+        $cate->setUpdateAt($current);
+
+        $em->persist($cate);
+        $em->flush();
+
+    }
 }

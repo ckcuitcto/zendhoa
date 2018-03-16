@@ -44,8 +44,8 @@ class VerifyForm extends Form
                 'options' => array(
                     'label' => 'Remember me',
                     'use_hidden_element' => true, // nếu ng dùng k lựa chọn thì mặc định là gì,
-                    'checked_value' => 1,
-                    'unchecked_value' => 0,
+                    'checked_value' => true,
+                    'unchecked_value' => false,
                 )
             )
         );

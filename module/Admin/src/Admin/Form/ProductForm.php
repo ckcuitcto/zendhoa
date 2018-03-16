@@ -2,9 +2,11 @@
 
 namespace Admin\Form;
 
+use Zend\Filter\File\RenameUpload;
 use Zend\Form\Form;
 use Zend\InputFilter\FileInput;
 use Zend\InputFilter\InputFilter;
+use Zend\Validator\File\UploadFile;
 
 
 class ProductForm extends Form
@@ -208,47 +210,36 @@ class ProductForm extends Form
         ));
 
         $fileInput = new FileInput('image');
-        $fileInput->setRequired(false);
+        $fileInput->setRequired(true);
         $fileInput->getValidatorChain()
+            ->attach(new UploadFile())
             ->attachByName('filesize',      array('max' => 2004800))
             ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpg,img/JPG,image/jpeg,application/pdf'));
-
-
-        // phần này sẽ đc set bên upload method
-
 //            ->attachByName('fileimagesize', array('maxWidth' => 1000, 'maxHeight' => 1000));
-//        $fileInput->getFilterChain()->attachByName(
-//            'filerenameupload',
-//            array(
-//                'target'    => './public/data/images/image.png',
-//                'randomize' => true,
-//            )
-//        );
+        // phần này sẽ đc set bên upload method
+        $fileInput->getFilterChain()
+            ->attach(new RenameUpload(array(
+                'target'    => './public/data/images/file.png',
+                'randomize' => true,
+            )));
         $input->add($fileInput);
-
 
         // File Input
         $productImages = new FileInput('productImages');
-        $productImages->setRequired(false);
+        $productImages->setRequired(true);
         // You only need to define validators and filters
         // as if only one file was being uploaded. All files
         // will be run through the same validators and filters
         // automatically.
         $productImages->getValidatorChain()
+            ->attach(new UploadFile())
             ->attachByName('filesize',      array('max' => 2004800))
             ->attachByName('filemimetype',  array('mimeType' => 'image/png,image/x-png,image/jpg,image/jpeg'));
-
-        // All files will be renamed, i.e.:
-        //   ./data/tmpuploads/avatar_4b3403665fea6.png,
-        //   ./data/tmpuploads/avatar_5c45147660fb7.png
-
-//        $productImages->getFilterChain()->attachByName(
-//            'filerenameupload',
-//            array(
-//                'target'    => './public/data/images/imagedetail.png',
-//                'randomize' => true,
-//            )
-//        );
+        $productImages->getFilterChain()
+            ->attach(new RenameUpload(array(
+                'target'    => './public/data/images/file.png',
+                'randomize' => true,
+            )));
         $input->add($productImages);
 
 
@@ -272,7 +263,7 @@ class ProductForm extends Form
             )
         ));
 
-
+        return $input;
     }
 }
 

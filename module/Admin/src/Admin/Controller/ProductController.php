@@ -37,7 +37,7 @@ class ProductController extends MainController
             $route = $e->getRouteMatch();
             $actionName = $route->getParam('action');
             //các quyền mà user k đc truy cập
-            $roleAction = array('add', 'edit', 'delete', 'list','deleteImage');
+            $roleAction = array('add', 'edit', 'delete', 'list', 'deleteImage');
             if (in_array($actionName, $roleAction)) {
                 $this->flashMessenger()->addMessage('Vui lòng đăng nhập để truy cập vào hệ thống');
                 return $this->redirect()->toRoute('admin/verify', array('action' => 'login'));
@@ -110,22 +110,11 @@ class ProductController extends MainController
             $form->setData($dataInput);
             if ($form->isValid()) {
 
-                //upload file
-                $files = $this->params()->fromFiles();
-                $uploadImageDetails = $this->upload($files['productImages']);
-                $fileImage = array($files['image']);
-                $uploadImage = $this->upload($fileImage);
+                $dataValid = $form->getData();
+                $sm->get('ProductManager')->addProduct($dataValid);
+                $this->flashMessenger()->addMessage('Thêm sản phẩm thành công !');
+                $this->redirect()->toRoute('admin/product', array('action' => 'index'));
 
-                echo "<pre>";
-                print_r($files);
-                echo "</pre>";
-
-                if ($uploadImageDetails['status'] == 'success' AND $uploadImage['status'] == 'success') {
-                    $dataValid = $form->getData();
-                    $sm->get('ProductManager')->addProduct($dataValid);
-                    $this->flashMessenger()->addMessage('Thêm sản phẩm thành công !');
-                    $this->redirect()->toRoute('admin/product', array('action' => 'index'));
-                }
             }
         }
         return new ViewModel(array('form' => $form));
@@ -164,8 +153,7 @@ class ProductController extends MainController
         $form->get('unit')->setValueOptions($arrUnit);
         $form->get('unit')->setAttributes(array('value' => $product->getUnit()->getId(), 'selected' => true));
 
-        $form->getInputFilter()->get('image')->setRequired(false);
-        $form->getInputFilter()->get('productImages')->setRequired(false);
+
 
         $form->get('submit')->setAttribute('value', 'Edit');
 
@@ -176,29 +164,13 @@ class ProductController extends MainController
                 $request->getFiles()->toArray()
             );
             $form->setData($dataInput);
+            $form->getInputFilter()->get('image')->setRequired(false);
+            $form->getInputFilter()->get('productImages')->setRequired(false);
             if ($form->isValid()) {
                 $dataValid = $form->getData();
-
-                $files = $this->params()->fromFiles();
-//                $uploadImageDetails = $this->upload($files['productImages']);
-                $fileImage = array($files['image']);
-                $uploadImage = $this->upload($fileImage);
-                echo "<pre>";
-                print_r($fileImage);
-
-//                print_r($uploadImageDetails);
-                print_r($uploadImage);
-                echo "</pre>";
-                if (
-//                    $uploadImageDetails['status'] == 'success'
-//                    AND
-                    $uploadImage['status'] == 'success'
-                ) {
-                    $sm->get('ProductManager')->editProduct($product, $dataValid);
-                    $this->flashMessenger()->addMessage('Sửa sản phẩm thành công !');
-                    $this->redirect()->toRoute('admin/product', array('action' => 'index'));
-                }
-
+                $sm->get('ProductManager')->editProduct($product, $dataValid);
+                $this->flashMessenger()->addMessage('Sửa sản phẩm thành công !');
+                $this->redirect()->toRoute('admin/product', array('action' => 'index'));
             }
         }
         return new ViewModel(array('form' => $form, 'productId' => $id, 'product' => $product));
@@ -221,59 +193,14 @@ class ProductController extends MainController
         return $this->redirect()->toRoute('admin/product', array('action' => 'index'));
     }
 
-    public function upload($files, $allowed = array('image/jpg', 'image/gif', 'application/pdf', 'image/jpeg'))
+    public function deleteImageAction()
     {
-        $messages = array('status' => 'success');
-        foreach ($files as $key => $file) {
-
-            if (!empty($file['name'])) {
-                $size = new \Zend\Validator\File\Size(array('min' => 1, 'max' => 31457280)); // minimum bytes filesize, max too..
-                $mime = new MimeType($allowed);
-
-                $adapter = new \Zend\File\Transfer\Adapter\Http();
-
-                $fileType = explode('.', $file['name']);
-                $fileType = $fileType[count($fileType) - 1];
-                // rename file
-                $rename = new \Zend\Filter\File\Rename(array(
-                    'target' => './public/data/images/image.png',
-                    "randomize" => true,
-                ));
-
-                $adapter->setValidators(array($size, $mime), $file['name']);
-                $adapter->setFilters(array($rename), $file['name']);
-
-                if ($adapter->isValid($file['name'])) {  // $key is field name in the form
-                    $adapter->setDestination($this->getFileLocation());
-                    if ($adapter->receive($file['name'])) {  // $key is field name in the form
-                        $messages['status'] = 'success';
-                        $messages['messages'][$file['name']] = array(
-                            'filename' => $file['name'],
-                            'status' => 'success',
-                            'message' => 'File uploaded successfully!',
-                        );
-                    }
-                } else {
-                    $messages['status'] = 'error';
-                    $messages['messages'][$file['name']] = array(
-                        'status' => 'error',
-                        'errors' => $adapter->getMessages(),
-                    );
-                    break;
-                }
-            }   // !empty($file)
-        }
-        return $messages;
-    }
-
-
-    public function deleteImageAction(){
         $em = $this->getEntitymanager();
 
         $id = $this->params()->fromRoute('id', 0);
 
         $productImage = $em->getRepository('\Admin\Entity\ProductImage')->findOneBy(array('id' => $id));
-        unlink(PATH_APP."/data/images/".$productImage->getImage());
+        unlink(PATH_APP . "/data/images/" . $productImage->getImage());
         $em->remove($productImage);
         $em->flush();
 
@@ -282,5 +209,52 @@ class ProductController extends MainController
         ));
         return $data;
     }
+
+
+
+//    public function upload($files, $allowed = array('image/jpg', 'image/gif', 'application/pdf', 'image/jpeg'))
+//    {
+//        $messages = array('status' => 'success');
+//        foreach ($files as $key => $file) {
+//
+//            if (!empty($file['name'])) {
+//                $size = new \Zend\Validator\File\Size(array('min' => 1, 'max' => 31457280)); // minimum bytes filesize, max too..
+//                $mime = new MimeType($allowed);
+//
+//                $adapter = new \Zend\File\Transfer\Adapter\Http();
+//
+//                $fileType = explode('.', $file['name']);
+//                $fileType = $fileType[count($fileType) - 1];
+//                // rename file
+//                $rename = new \Zend\Filter\File\Rename(array(
+//                    'target' => './public/data/images/image.png',
+//                    "randomize" => true,
+//                ));
+//
+//                $adapter->setValidators(array($size, $mime), $file['name']);
+//                $adapter->setFilters(array($rename), $file['name']);
+//
+//                if ($adapter->isValid($file['name'])) {  // $key is field name in the form
+//                    $adapter->setDestination($this->getFileLocation());
+//                    if ($adapter->receive($file['name'])) {  // $key is field name in the form
+//                        $messages['status'] = 'success';
+//                        $messages['messages'][$file['name']] = array(
+//                            'filename' => $file['name'],
+//                            'status' => 'success',
+//                            'message' => 'File uploaded successfully!',
+//                        );
+//                    }
+//                } else {
+//                    $messages['status'] = 'error';
+//                    $messages['messages'][$file['name']] = array(
+//                        'status' => 'error',
+//                        'errors' => $adapter->getMessages(),
+//                    );
+//                    break;
+//                }
+//            }   // !empty($file)
+//        }
+//        return $messages;
+//    }
 
 }
