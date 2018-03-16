@@ -16,6 +16,23 @@ use Zend\Authentication\Adapter\DbTable as DbTableAuthAdapter;
 
 class VerifyController extends AbstractActionController
 {
+    protected $myAuth;
+    protected $authService;
+
+    public function getMyAuth(){
+        if(empty($this->myAuth)){
+            $this->myAuth = $this->getServiceLocator()->get('MyAuth');
+        }
+        return $this->myAuth;
+    }
+
+    public function getAuthService(){
+        if(empty($this->authService)){
+            $this->authService = $this->getServiceLocator()->get('ZendAuth');
+        }
+        return $this->authService;
+    }
+
     public function indexAction()
     {
         $sm = $this->getServiceLocator();
@@ -57,6 +74,10 @@ class VerifyController extends AbstractActionController
                 $authResult = $authService->authenticate();
 
                 if ($authResult->isValid()) {
+                    if($dataValid['remember']==1){
+                        $this->getMyAuth()->setRememberMe(1);
+                        $authService->setStorage($this->getMyAuth());
+                    }
                     $identity = $authResult->getIdentity();
                     $authService->getStorage()->write($identity);
                     return $this->redirect()->toRoute('admin/product');
@@ -73,6 +94,7 @@ class VerifyController extends AbstractActionController
         $authService = $sm->get('ZendAuth');
         $authService->clearIdentity();
 
+        $this->getMyAuth()->forgetMe();
         $this->flashMessenger()->addMessage('Đăng xuất thành công');
         return $this->redirect()->toRoute('admin/verify', array('action' => 'login'));
     }

@@ -10,6 +10,7 @@ namespace Admin;
 
 use Admin\Form\CategoryForm;
 use Admin\Form\VerifyForm;
+use Admin\Model\MyAuth;
 use Admin\View\Helper\Layout;
 use Admin\View\Helper\Unicode;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
@@ -85,6 +86,10 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
                     // If you are using DoctrineODMModule:
 //                    return $sm->get('doctrine.authenticationservice.odm_default');
                 },
+                'MyAuth' => function($sm){
+                    $auth = new MyAuth();
+                    return $auth;
+                }
             ],
         );
     }
