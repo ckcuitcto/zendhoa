@@ -1,0 +1,72 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <?php echo $this->headTitle('Flower Shop '. $this->translate('Web bán hoa -Zend Framework 2'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?php echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+        ->prependStylesheet($this->basePath() . '/admin1/vendor/bootstrap/css/bootstrap.min.css')
+        ->prependStylesheet($this->basePath() . '/admin1/vendor/metisMenu/metisMenu.min.css')
+        ->prependStylesheet($this->basePath() . '/admin1/dist/css/sb-admin-2.css')
+        ->prependStylesheet($this->basePath() . '/admin1/vendor/morrisjs/morris.css')
+        ->prependStylesheet($this->basePath() . '/admin1/vendor/font-awesome/css/font-awesome.min.css')
+        ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
+        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
+    ?>
+    <?php echo $this->headScript()
+        ->prependFile($this->basePath() . '/js/script.js')
+        ->prependFile($this->basePath() . '/admin1/dist/js/sb-admin-2.js')
+        ->prependFile($this->basePath() . '/admin1/data/morris-data.js')
+        ->prependFile($this->basePath() . '/admin1/vendor/morrisjs/morris.min.js')
+        ->prependFile($this->basePath() . '/admin1/vendor/raphael/raphael.min.js')
+
+        ->prependFile($this->basePath() . '/admin1/vendor/metisMenu/metisMenu.min.js')
+        ->prependFile($this->basePath() . '/admin1/vendor/bootstrap/js/bootstrap.min.js')
+        ->prependFile($this->basePath() . '/admin1/vendor/jquery/jquery.min.js')
+
+//        ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+//        ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+    ; ?>
+    <!--     Scripts -->
+    <!--    --><?php //echo $this->headScript()
+    //        ->prependFile($this->basePath() . '/admin1/vendor/jquery/jquery.min.js')
+    //        ->prependFile($this->basePath() . '/admin1/vendor/bootstrap/js/bootstrap.min.js')
+    //        ->prependFile($this->basePath() . '/admin1/vendor/metisMenu/metisMenu.min.js')
+    //        ->prependFile($this->basePath() . '/admin1/vendor/raphael/raphael.min.js')
+    //        ->prependFile($this->basePath() . '/admin1/vendor/morrisjs/morris.min.js')
+    //        ->prependFile($this->basePath() . '/admin1/data/morris-data.js')
+    //        ->prependFile($this->basePath() . '/admin1/dist/js/sb-admin-2.js')
+    //
+    //        ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+    //        ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+    //    ; ?>
+
+</head>
+
+
+<body>
+<div id="wrapper">
+    <!-- Navigation -->
+        <?php
+        echo $this->content;
+        ?>
+
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- jQuery-->
+
+<?php echo $this->inlineScript() ?>
+</body>
+
+
+</html>

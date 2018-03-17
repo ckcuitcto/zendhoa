@@ -72,6 +72,11 @@ class User
     protected $updatedAt;
 
     /**
+     * @ORM\Column(name="remember_token");
+     */
+    protected $rememberToken;
+
+    /**
      * @param int $id
      */
     public function setId($id)
@@ -262,5 +267,21 @@ class User
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @param string $rememberToken
+     */
+    public function setRememberToken($rememberToken)
+    {
+        $this->rememberToken = $rememberToken;
+    }
+
+    /**
+     * @return varchar
+     */
+    public function getRememberToken()
+    {
+        return $this->rememberToken;
     }
 }

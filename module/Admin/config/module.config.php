@@ -31,8 +31,8 @@ return array(
                         // Change this value to reflect the namespace in which
                         // the controllers for your module are found
                         '__NAMESPACE__' => 'Admin\Controller',
-                        'controller' => 'Index',
-                        'action' => 'index',
+                        'controller' => 'verify',
+                        'action' => 'login  ',
                     ),
                 ),
                 'may_terminate' => true,
@@ -50,8 +50,8 @@ return array(
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
-                                'controller' => 'Index',
-                                'action' => 'index',
+                                'controller' => 'Verify',
+                                'action' => 'login',
                             ),
                         ),
                     ),
@@ -104,15 +104,15 @@ return array(
                     'verify' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '/verify[/:action]',
+                            'route' => '/verify[/:action[/:code]]',
                             'constraints' => array(
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]+',
+                                'code' => '[a-zA-Z0-9]+',
                             ),
                             'defaults' => array(
                                 '__NAMESPACE__' => 'Admin\Controller',
                                 'controller' => 'Verify',
                                 'action' => 'login',
-
                             ),
                         ),
                     ),
@@ -166,4 +166,19 @@ return array(
         ],
     ],
     'upload_location' => dirname(__DIR__)."/../../public/data/images",
+    'recaptcha' => array(
+        'public' => '6Lf65EcUAAAAAHfsKWZj72FJFVflgebWAhZVkJNk',
+        'private' => '6Lf65EcUAAAAAExw1XDcvmeeTrXrRTCIgIQdof2U',
+    ),
+    'email_config' => [
+        'forgot' =>[
+            'nameFrom' => 'Đức Test Zend Mail',
+            'emailFrom' => 'hoasaigonn@gmail.com'
+        ]
+    ],
+    'smtp_config' => array(
+        'username' => "hoasaigonn@gmail.com",
+        'password' => "giahanthaiduc",
+        'ssl' => 'ssl'
+    ),
 );

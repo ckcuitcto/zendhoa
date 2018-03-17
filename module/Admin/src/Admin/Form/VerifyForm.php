@@ -13,13 +13,16 @@ use Zend\InputFilter\InputFilter;
 
 class VerifyForm extends Form
 {
-    public function __construct($name){
+    public function __construct($name)
+    {
         parent::__construct($name);
-        $this->setAttribute('method','post');
+        $this->setAttribute('method', 'post');
         $this->addElements();
 //        $this->addInputFiltersLogin();
     }
-    public function addElements(){
+
+    public function addElements()
+    {
         $this->add(array(
             'type' => 'email',
             'name' => 'email',
@@ -36,6 +39,18 @@ class VerifyForm extends Form
                 'placeholder' => 'Password',
             )
         ));
+
+        $this->add(
+            array(
+                'name' => 'repassword',
+                'type' => 'password',
+                'attributes' => array(
+                    'class' => 'form-control',
+                    'placeholder' => 'Re-Password',
+
+                ),
+            )
+        );
 
         $this->add(
             array(
@@ -59,7 +74,9 @@ class VerifyForm extends Form
             ),
         ));
     }
-    public function addInputFiltersLogin(){
+
+    public function addInputFiltersLogin()
+    {
         $input = new InputFilter();
         $this->setInputFilter($input);
 
@@ -91,5 +108,55 @@ class VerifyForm extends Form
             )
         );
 
+    }
+
+    public function addInputFiltersForgot()
+    {
+        $input = new InputFilter();
+        $this->setInputFilter($input);
+        $input->add(
+            array(
+                'name' => 'password',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StringTrim'),
+                    array('name' => 'StripTags')
+                ),
+                'validators' => array(
+                    array('name' => 'NotEmpty'),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 6,
+                            'max' => 32,
+                            'messages' => array(
+                                'stringLengthTooShort' => 'Mật khẩu không được ít hơn %min% kí tự',
+                                'stringLengthTooLong' => 'Mật khẩu  không được vượt quá %max% kí tự',
+                            )
+                        )
+                    ),
+                )
+            )
+
+        );
+
+        $input->add(
+            array(
+                'name' => 'repassword',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StringTrim'),
+                    array('name' => 'StripTags')
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'Identical',
+                        'options' => array(
+                            'token' => 'password'
+                        )),
+                )
+            )
+
+        );
     }
 }

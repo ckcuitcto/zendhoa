@@ -16,9 +16,33 @@ use Admin\View\Helper\Unicode;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Admin\Form\ProductForm;
+use Zend\Mvc\ModuleRouteListener;
+use Zend\Mvc\MvcEvent;
 
 class Module implements AutoloaderProviderInterface, ConfigProviderInterface
 {
+    public function onBootstrap(MvcEvent $e)
+    {
+        $eventManager        = $e->getApplication()->getEventManager();
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
+
+        $share = $eventManager->getSharedManager();
+        $share->attach(__NAMESPACE__, MvcEvent::EVENT_DISPATCH, function ($e) {
+             $controller = $e->getTarget();
+            //lây ra controller. kiểm tra xem ó có liên quan j với nhau k
+            if($controller instanceof Controller\VerifyController){
+                $controller->layout('layout/auth');
+            }else{
+                $sm = $e->getApplication()->getServiceManager();
+                $auth = $sm->get('ZendAuth');
+                if (!$auth->hasIdentity()) {
+                    $controller->plugin('redirect')->toRoute('admin/verify',['action' => 'login']);
+                }
+            }
+        });
+    }
+
     public function getAutoloaderConfig()
     {
         return array(
@@ -75,9 +99,10 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
     public function getServiceConfig(){
         return array(
             'invokables' => array(
-                'ProductManager' => 'Admin\Service\ProductManager',
-                'CategoryManager' => 'Admin\Service\CategoryManager',
-                'UnitManager' => 'Admin\Service\UnitManager',
+                'ProductManager'    => 'Admin\Service\ProductManager',
+                'CategoryManager'   => 'Admin\Service\CategoryManager',
+                'UnitManager'       => 'Admin\Service\UnitManager',
+                'UserManager'       => 'Admin\Service\UserManager',
             ),
             'factories' => [
                 'ZendAuth' => function ($sm) {

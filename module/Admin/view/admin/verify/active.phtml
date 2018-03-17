@@ -10,7 +10,7 @@
     <div class="col-md-4 col-md-offset-4">
         <div class="login-panel panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Please Sign In</h3>
+                <h3 class="panel-title">Nhập mật khẩu mới</h3>
             </div>
             <div class="panel-body">
                 <?php
@@ -23,38 +23,36 @@
                 <?php
                 if (!empty($flash)) {
                     echo "<div class='alert-success alert'> ";
-                    echo $flash[0];
+                    if(is_array($flash)){
+                        echo $flash[0];
+                    }else{
+                        echo $flash;
+                    }
                     echo "</div>";
                 }
                 ?>
 
                 <?php
                 $form->prepare();
-                $form->setAttribute('action',$this->url('admin/verify',array('action'=>'login')));
+                $form->setAttribute('action',$this->url('admin/verify',array('action'=>'active','code'=>$code)));
 
                 echo $this->form()->openTag($form);
-
-                echo "<div class='form-group'>";
-                echo $this->formElement($form->get('email'));
-                echo $this->formElementErrors($form->get('email'));
-                echo "</div>";
 
                 echo "<div class='form-group'>";
                 echo $this->formElement($form->get('password'));
                 echo $this->formElementErrors($form->get('password'));
                 echo "</div>";
 
-                echo "<div class='checkbox'>";
-                echo $this->formElement($form->get('remember'))." ";
-                echo $this->formLabel($form->get('remember'));
+                echo "<div class='form-group'>";
+                echo $this->formElement($form->get('repassword'));
+                echo $this->formElementErrors($form->get('repassword'));
                 echo "</div>";
 
                 echo $this->formElement($form->get('submit'));
                 echo $this->form()->closeTag();
 
                 ?>
-                <hr>
-                <a href="<?php echo $this->url('admin/verify',array('action' => 'forgot')) ?>">Quên mật khẩu ? </a>
+
             </div>
         </div>
     </div>
