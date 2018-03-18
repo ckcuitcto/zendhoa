@@ -12,5 +12,11 @@
         "zendframework/zendframework": "~2.4.11",
         "doctrine/doctrine-orm-module":"*",
         "zendframework/zendservice-recaptcha":"*"
+    },
+    "autoload":{
+        "psr-0": {
+            "ThaiDuc\\":"vendor/ThaiDucLibrary/Library"
+        }
     }
+
 }

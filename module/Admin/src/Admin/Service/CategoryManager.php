@@ -68,6 +68,12 @@ class CategoryManager implements ServiceManagerAwareInterface
 
         $em->persist($cate);
         $em->flush();
+    }
+
+    public function removeCategory($cate){
+        $em = $this->getEntityManager();
+        $em->remove($cate);
+        $em->flush();
 
     }
 }

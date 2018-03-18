@@ -1,0 +1,90 @@
+<?php
+
+$this->inlineScript()->captureStart();
+echo <<<JS
+    $(document).ready(function(){
+        isCheckedController("user");
+        check_enable("user","useraction");
+        
+         isCheckedController("product");
+        check_enable("product","productaction");
+        
+         isCheckedController("category");
+        check_enable("category","categoryaction");
+        
+    })
+    
+    function check_enable(controller,namecheckbox){
+        $("#"+controller).click(function(e){
+            if(this.checked){
+                $("input."+namecheckbox).removeAttr("disabled");
+            }else{
+                $("input."+namecheckbox).attr("disabled",true);
+                $("input."+namecheckbox).attr("checked",false);
+            }
+        })
+    }
+    
+    function isCheckedController(controller){
+        check = $("input#"+controller).attr("checked");
+        if (check != "checked"){
+            $("input."+controller+"action").attr("disabled",true);
+        }
+    }
+JS;
+$this->inlineScript()->captureEnd();
+?>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Sửa quyền của <?=$user->getName()?> </h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Tích chọn vào các quyền được phép
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-8">
+
+                        <?php
+                            $form->prepare();
+                            $form->setAttribute('action',$this->url('admin/user',['action'=>'access','id'=>$id]));
+                            echo $this->form()->openTag($form);
+
+                        echo "<div class='checkbox'>";
+                        echo $this->formElement($form->get('categorycontroller'));
+                        echo $this->formLabel($form->get('category'));
+                        echo "<br>";
+                        echo $this->formElement($form->get('category'));
+                        echo "<hr>";
+                        echo "</div>";
+
+                        echo "<div class='checkbox'>";
+                        echo $this->formElement($form->get('productcontroller'));
+                        echo $this->formLabel($form->get('product'));
+                        echo "<br>";
+                        echo $this->formElement($form->get('product'));
+                        echo "<hr>";
+                        echo "</div>";
+
+                        echo "<div class='checkbox'>";
+                        echo $this->formElement($form->get('usercontroller'));
+                        echo $this->formLabel($form->get('user'));
+                        echo "<br>";
+                        echo $this->formElement($form->get('user'));
+                        echo "<hr>";
+                        echo "</div>";
+
+                        echo $this->formElement($form->get('submit'));
+                        echo $this->form()->closeTag();
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

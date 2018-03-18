@@ -136,8 +136,8 @@ class VerifyController extends AbstractActionController
         $sm = $this->getServiceLocator();
         $authService = $sm->get('ZendAuth');
         $authService->clearIdentity();
-
         $this->getMyAuth()->forgetMe();
+
         $this->flashMessenger()->addMessage('Đăng xuất thành công');
         return $this->redirect()->toRoute('admin/verify', array('action' => 'login'));
     }
@@ -236,5 +236,9 @@ class VerifyController extends AbstractActionController
             return $this->redirect()->toRoute('admin/verify', array('action' => 'forgot'));
         }
         return new ViewModel(['form' => $form, 'code' => $code]);
+    }
+
+    public function deniedAction(){
+        return new ViewModel();
     }
 }

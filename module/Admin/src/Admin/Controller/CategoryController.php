@@ -84,6 +84,18 @@ class CategoryController extends MainController
 
     public function deleteAction(){
         $em = $this->getEventManager();
-        $sm = $this->getServiceLocator();
+//
+//        $id = $this->params()->fromRoute('id', 0);
+//        $product = $em->getRepository('\Admin\Entity\Category')->findOneBy(array('id' => $id));
+//
+//        if (!$id OR empty($product)) {
+//            return $this->redirect()->toRoute('admin/category', array('action' => 'index'));
+//        }
+//
+//        $em->remove($product);
+//        $em->flush();
+//
+//        $this->flashMessenger()->addMessage("Xoá sản phẩm " . $product->getName() . " thành công !");
+//        return $this->redirect()->toRoute('admin/product', array('action' => 'index'));
     }
 }

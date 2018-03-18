@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\Admin\Repository\UserRepository")
  * @ORM\Table(name="users")
  */
 class User
@@ -75,6 +76,11 @@ class User
      * @ORM\Column(name="remember_token");
      */
     protected $rememberToken;
+
+    /**
+     * @ORM\Column(name="access");
+     */
+    protected $access;
 
     /**
      * @param int $id
@@ -283,5 +289,21 @@ class User
     public function getRememberToken()
     {
         return $this->rememberToken;
+    }
+
+    /**
+     * @param string $access
+     */
+    public function setAccess($access)
+    {
+        $this->access = $access;
+    }
+
+    /**
+     * @return varchar
+     */
+    public function getAccess()
+    {
+        return $this->access;
     }
 }

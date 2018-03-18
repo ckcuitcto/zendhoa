@@ -8,6 +8,7 @@
  */
 namespace Admin;
 
+use Admin\Form\AccessForm;
 use Admin\Form\CategoryForm;
 use Admin\Form\VerifyForm;
 use Admin\Model\MyAuth;
@@ -29,18 +30,33 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
 
         $share = $eventManager->getSharedManager();
         $share->attach(__NAMESPACE__, MvcEvent::EVENT_DISPATCH, function ($e) {
-             $controller = $e->getTarget();
-            //lây ra controller. kiểm tra xem ó có liên quan j với nhau k
-            if($controller instanceof Controller\VerifyController){
+
+            $controller = $e->getTarget();
+
+            $route = $e->getRouteMatch();
+            $actionName = $route->getParam('action');
+
+            //lây ra controller. kiểm tra xem ó có liên quan j với nhau k. và action phải khác logout
+            if($controller instanceof Controller\VerifyController AND $actionName != "logout"){
                 $controller->layout('layout/auth');
             }else{
                 $sm = $e->getApplication()->getServiceManager();
-                $auth = $sm->get('ZendAuth');
+//                $auth = $sm->get('ZendAuth');
+                $plugin = $sm->get('ControllerPluginManager')->get('ThaiDuc\Controller\Plugin\AclPlugin');
+                $plugin->RoleAccess($e);
+                $response = $e->getResponse();
+                if($response->getStatusCode() == 302){
+                    $e->stopPropagation();
+                    $controller->plugin('redirect')->toRoute('admin/verify',['action' => 'denied']);
+                }
+                /*
                 if (!$auth->hasIdentity()) {
                     $controller->plugin('redirect')->toRoute('admin/verify',['action' => 'login']);
                 }
+                */
             }
-        });
+            // độ ưu tiên, k cần view vẫn chạy
+        },99);
     }
 
     public function getAutoloaderConfig()
@@ -74,7 +90,11 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
 
     public function getConfig()
     {
-        return include __DIR__ . '/config/module.config.php';
+        return array_merge(
+            include __DIR__ . '/config/module.config.php',
+            include __DIR__ . '/config/router.config.php'
+        );
+
     }
 
     public function getFormElementConfig(){
@@ -90,6 +110,10 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface
                 },
                 'CategoryForm' => function($sm){
                     $form = new CategoryForm('Category_Form');
+                    return $form;
+                },
+                'AccessForm' => function($sm){
+                    $form = new AccessForm('Access_Form');
                     return $form;
                 }
             ),

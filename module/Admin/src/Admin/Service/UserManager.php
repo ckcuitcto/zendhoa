@@ -50,4 +50,13 @@ class UserManager implements ServiceManagerAwareInterface
         $em->flush();
     }
 
+    public function saveAccessByUserId($userId,$strAccess){
+        $em = $this->getEntityManager();
+        $user = $em->getRepository("\Admin\Entity\User")->findOneBy(array('id'=>$userId));
+        $user->setAccess($strAccess);
+        $em->persist($user);
+        $em->flush();
+    }
+
+
 }

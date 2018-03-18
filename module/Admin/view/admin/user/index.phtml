@@ -1,1 +1,103 @@
-index
+<?php
+//echo $this->headStyle()
+//    ->appendStyle($this->basePath().'/vendor/datatables-plugins/dataTables.bootstrap.css')
+//    ->appendStyle($this->basePath().'/vendor/datatables-responsive/dataTables.responsive.css');
+//
+$this->inlineScript()->captureStart();
+echo <<<JS
+    $("div.alert-success").fadeOut(3000);
+JS;
+$this->inlineScript()->captureEnd();
+?>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Danh sách sản phẩm</h1>
+        <?php
+        if (count($flash)) {
+            $message = $flash;
+            echo "<div class='alert-success alert'> ";
+            foreach ($message as $mess) {
+                echo $mess;
+            }
+            echo "</div>";
+        }
+        ?>
+    </div>
+
+
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Danh sách sản phẩm
+                <div class = "pull-right"><a href="<?php echo $this->url('admin/product',array('action'=>'add')) ?>">Thêm sản phẩm mới</a></div>
+
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Level</th>
+                        <th>Giới tính</th>
+                        <th>Địa chỉ</th>
+                        <th>SĐT</th>
+                        <th>Sửa</th>
+                        <th>Phân quyền</th>
+                        <th>Xoá</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    $basePath = $this->basePath();
+                    foreach ($users as $user) :
+                        $nameUrl = $this->Unicode()->make($user->getName());
+                        ?>
+                        <tr class="odd gradeX">
+                            <td><?= $user->getId() ?></td>
+                            <td><?= $user->getName() ?></td>
+                            <td><?= $user->getEmail() ?></td>
+                            <td><?= $user->getLevel() ?></td>
+                            <td><?= $user->getGender() ?></td>
+                            <td><?= $user->getAddress() ?></td>
+                            <td><?= $user->getPhoneNumber() ?></td>
+                            <td class="center"><a href="<?= $this->url('admin/user', array('action'=>'edit','id'=> $user->getId(),'name'=>$nameUrl)); ?>">Sửa</a></td>
+                            <td class="center"><a href="<?= $this->url('admin/user', array('action'=>'access','id'=> $user->getId(),'name'=>$nameUrl)); ?>">Phân quyền</a></td>
+                            <td class="center"><a href="<?= $this->url('admin/user', array('action'=>'delete','id'=> $user->getId())); ?>" onClick='return confirm_delete_product();'>Xoá</a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <div class="panel-footer">
+            <?php
+            echo $this->paginationControl(
+                $users,
+                'sliding',
+                array('partial/pagination.phtml','admin'),
+                array(
+                    'route' => 'admin/user',
+                    'params' => array('action' => 'index')
+                )
+            );
+            ?>
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<?php echo $this->headScript()
+    ->prependFile($this->basePath() . '/admin1/vendor/datatables-responsive/dataTables.responsive.js')
+    ->prependFile($this->basePath() . '/admin1/vendor/datatables-plugins/dataTables.bootstrap.min.js')
+    ->prependFile($this->basePath() . '/admin1/vendor/datatables/js/jquery.dataTables.min.js'); ?>
+

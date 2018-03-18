@@ -17,8 +17,8 @@ class UserRepository extends EntityRepository
 
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
-        $qb->select('p')->from('\Admin\Entity\Product','p')
-                            ->orderBy('p.id','DESC')
+        $qb->select('p')->from('\Admin\Entity\User','p')
+                            ->orderBy('p.level','DESC')
                             ->setMaxResults($data['ItemCountPerPage'])
                             ->setFirstResult(($data['CurrentPageNumber']-1)*$data['ItemCountPerPage'] );
         $product = $qb->getQuery();
