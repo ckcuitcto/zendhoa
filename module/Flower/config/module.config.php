@@ -2,7 +2,7 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'Flower\Controller\Index' => 'Flower\Controller\IndexController',
+            'Flower\Controller\Home' => 'Flower\Controller\HomeController',
         ),
     ),
     'router' => array(

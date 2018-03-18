@@ -18,4 +18,9 @@ class IndexController extends AbstractActionController
     {
         return new ViewModel();
     }
+
+    public function listAction(){
+        echo "!1!111111111111111111";
+        return false;
+    }
 }

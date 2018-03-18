@@ -8,6 +8,17 @@
 return array(
     'router' => array(
         'routes' => array(
+            'home' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/',
+                    'defaults' => array(
+                        'controller' => 'Flower\Controller\Home',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
+
             'admin' => array(
                 'type' => 'Literal',
                 'options' => array(

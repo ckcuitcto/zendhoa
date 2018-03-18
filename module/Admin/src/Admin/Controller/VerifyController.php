@@ -10,6 +10,7 @@ namespace Admin\Controller;
 
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\Adapter\DbTable as DbTableAuthAdapter;
